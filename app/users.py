@@ -1,14 +1,13 @@
 from json import dumps
 from flask import Blueprint
-
+from flask_cors import cross_origin
 from .modules.database import create_connect
-from .modules.access_handler import access_handler
 
 users_router = Blueprint('users', __name__, url_prefix='/users')
 
 
 @users_router.get('/')
-@access_handler(1)
+@cross_origin()
 def get_roles(user):
     db, sql = create_connect()
 

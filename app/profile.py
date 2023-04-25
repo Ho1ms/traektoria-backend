@@ -46,7 +46,7 @@ def update_my_profile(user):
         return dumps({'message': 'Вы не передали данные #2!', 'resultCode': 2}, ensure_ascii=False), 200
 
     db, sql = create_connect()
-    print(data)
+
     sql.execute(
         f"UPDATE users SET {'=%s, '.join(keys)}=%s WHERE id=%s",
         (*(data[key] for key in keys), user['id']))

@@ -15,7 +15,7 @@ def get_user(auth_token, roles):
         params = (auth_token,)
 
     sql.execute(
-        f"""SELECT u.id, first_name, last_name, father_name, login, role_id, r.name role
+        f"""SELECT u.id, first_name, last_name, father_name, login, role_id, r.name role, birthday
                                 FROM users u LEFT JOIN roles r on r.id = u.role_id 
                                 LEFT JOIN sessions s on u.id = s.user_id AND s.is_active = true
                                 WHERE token=%s {role_access}""",

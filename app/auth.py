@@ -39,6 +39,7 @@ def get_login():
     db.close()
 
     user['token'] = token
+
     return dumps(user, ensure_ascii=False), 200
 
 
