@@ -1,13 +1,17 @@
-=== AUTH ===
+## Authorization
 
-- POST /auth/login - Авторизиция
+- **POST** `/auth/login` **- Авторизиция**
 
-json (body) = {
+**Body**
+```
+{
     "login": str,
-    "password":str
+    "password": str
 }
-
-resp => {
+```
+**Response**
+```
+{
     'id': int,
     'first_name': str,
     'last_name': str,
@@ -17,11 +21,17 @@ resp => {
     'role': str,
     'token': str - Это сохранять в localStorage и в Authorization пихать
 }
+```
+- **GET** `/auth/me` **- Инфо о пользователе по токену**
 
-- GET /auth/me - Инфо о пользователе по токену
-headers = Authorization: **token**
+**Headers**
+```
+Authorization: **token**
+```
 
-resp => {
+**Response**
+```
+{
     'id': int,
     'first_name': str,
     'last_name': str,
@@ -30,27 +40,43 @@ resp => {
     'role_id': int,
     'role': str
 }
+```
+- **GET** `/auth/logout` **- Выйти**
 
-- GET /auth/logout - Выйти
-headers = Authorization: **token**
-
-resp => {
+**Headers**
+```
+Authorization: **token**
+```
+**Response**
+```
+{
     message: str,
     resultCode: int
 }
+```
+- **POST** `/auth/confirm-mail` **- Подтверждение почты**
 
-- POST /auth/confirm-mail
-body = {
+**Body**
+```
+{
     "mail": str
 }
-
-resp => {
+```
+**Response**
+```
+{
     message: str,
     resultCode: int
 }
+```
 
-- GET /auth/register - Создать аккаунт (Сначала надо подтвердить почту /auth/confirm-mail)
-body = {
+- **GET** `/auth/register` **- Создать аккаунт**
+
+**(Сначала надо подтвердить почту `/auth/confirm-mail`)**
+
+**Body**
+```
+{
     'login': str,
     'password': str,
     'first_name': str,
@@ -60,57 +86,90 @@ body = {
     'email': str,
     'code': str - 6 символов от 0 до 9
 }
-
-resp => {
+```
+**Response**
+```
+{
     message: str,
     resultCode: int
 }
+```
 
-=== PROFILE ===
+## Profile
 
-- GET /profile/avatar/<user_id:int>
+- **GET** `/profile/avatar/<user_id:int>` **- Получить аватар пользователя по ID**
 
-resp => Файлик (фото)
+**Response**
+```
+resp => FILE (Render photo)
+```
+- **POST** `/profile/set-avatar` **- Обновить аватар**
 
-- POST /profile/set-avatar
-headers = Authorization: **token**
-
-form-data = {
+**Headers**
+```
+Authorization: **token**
+```
+**Form-data**
+```
+{
     avatar: FILE
 }
+```
+**Response**
+```
+{
+    message: str,
+    resultCode: int
+}
+```
+- **POST** `/profile/update` **- Обновить данные профиля**
 
-- POST /profile/update
-headers = Authorization: **token**
-
-body = {
+**Headers**
+```
+Authorization: **token**
+```
+**Body**
+```
+{
     'first_name': str,
     'last_name': str,
     'father_name' str,
     'birthday': str YYYY-MM-DD
 }
-
-resp => {
+```
+**Response**
+```
+{
     message: str,
     resultCode: int
 }
+```
+- **POST** `/profile/change_password` **- Изменить пароль**
 
-- POST /profile/change_password
-headers = Authorization: **token**
-
-body = {
+**Headers**
+```
+Authorization: **token**
+```
+**Body**
+```
+{
     password_1: str,
     password_2: str
 }
-
-resp => {
+```
+**Response**
+```
+{
     message: str,
     resultCode: int
 }
+```
+## Users
+- **GET** `/users` **- Список пользователей**
 
-=== USERS ===
-- GET /users
-
-resp => [
+**Response**
+```
+[
     {
         "id": id,
         "first_name": str,
@@ -118,12 +177,18 @@ resp => [
         "father_name": str
     }
 ]
+```
+## ADMIN 
+> Работает если и пользователя `role_id=1`
+- **GET** `/admin/roles` **- Список ролей**
 
-=== ADMIN === Работает если и юзера role_id = 1
-- GET /admin/roles
-headers = Authorization: **token**
-
-resp => [
+**Headers**
+```
+Authorization: **token**
+```
+**Response**
+```
+[
     {
         "id": 1,
         "name": "Администратор"
@@ -137,11 +202,16 @@ resp => [
         "name": "Студент"
     }
 ]
+```
+- **GET** `/admin/users` **- Список пользователей для администраторов**
 
-- GET /admin/users
-headers = Authorization: **token**
-
-resp => [
+**Headers**
+```
+Authorization: **token**
+```
+**Response**
+```
+[
     {
         "id": int,
         "login": str,
@@ -154,15 +224,20 @@ resp => [
         "birthday": str YYYY-MM-DD
     },
 ]
+```
+- **POST** `/update_user/role` **- Обновить роль пользователю**
 
-- POST /update_user/role
-headers = Authorization: **token**
-
-body = {
+**Headers**
+```
+Authorization: **token**
+```
+**Body**
+```
+{
     'user_id': int, - тот которому мы меняем роль (можно взять из /admin/users)
     'role_id': int - ту на которую меняем (/admin/roles)
 }
-
+```
 
 
 
