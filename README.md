@@ -36,6 +36,7 @@ Authorization: **token**
     'first_name': str,
     'last_name': str,
     'father_name': str,
+    'birthday': str YYYY-MM-DD,
     'login': str,
     'role_id': int,
     'role': str
@@ -70,7 +71,7 @@ Authorization: **token**
 }
 ```
 
-- **GET** `/auth/register` **- Создать аккаунт**
+- **POST** `/auth/register` **- Создать аккаунт**
 
 **(Сначала надо подтвердить почту `/auth/confirm-mail`)**
 
@@ -90,18 +91,25 @@ Authorization: **token**
 **Response**
 ```
 {
-    message: str,
-    resultCode: int
+    'id': int,
+    'first_name': str,
+    'last_name': str,
+    'father_name': str,
+    'birthday': str YYYY-MM-DD,
+    'login': str,
+    'role_id': int,
+    'role': str,
+    'token':str
 }
 ```
 
 ## Profile
 
-- **GET** `/profile/avatar/<user_id:int>` **- Получить аватар пользователя по ID**
+- **GET** `/avatar/<user_id:int>` **- Получить аватар пользователя по ID**
 
 **Response**
 ```
-resp => FILE (Render photo)
+FILE (Render photo)
 ```
 - **POST** `/profile/set-avatar` **- Обновить аватар**
 

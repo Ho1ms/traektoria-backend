@@ -9,7 +9,7 @@ from flask import Blueprint, request
 from .modules.confirm_mail import mail_send
 from .modules.database import create_connect
 from .modules.validator import validate_data
-from .modules.access_handler import access_handler
+from .modules.access_handler import access_handler, get_user
 
 auth_router = Blueprint('auth', __name__, url_prefix='/auth')
 
@@ -96,13 +96,18 @@ def create_account():
     data['password'] = sha256(data['password'].encode('utf-8')).hexdigest()
 
     sql.execute(
-        f"INSERT INTO users ({', '.join(keys)}) VALUES ({(', %s' * len(keys))[2:]})",
+        f"INSERT INTO users ({', '.join(keys)}) VALUES ({(', %s' * len(keys))[2:]}) RETURNING id",
         (*(data[key] for key in keys),))
 
+    user_id = sql.fetchone()['id']
+    token = sha256(f"{data['password']}{randint(0, 999)}{datetime.now().timestamp()}".encode('utf-8')).hexdigest()
+    sql.execute("INSERT INTO sessions (token, user_id) VALUES (%s, %s)", (token, user_id))
     db.commit()
     db.close()
 
-    return dumps({'message': 'Вы успешно создали аккаунт!', 'resultCode': 0}, ensure_ascii=False), 200
+    user = get_user(token)
+    user['token'] = token
+    return dumps(user, ensure_ascii=False, default=str), 200
 
 
 @auth_router.post('/confirm-mail')

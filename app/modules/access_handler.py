@@ -4,7 +4,7 @@ from flask_cors import cross_origin
 from .database import create_connect
 
 
-def get_user(auth_token, roles):
+def get_user(auth_token, roles=()):
     db, sql = create_connect()
 
     if len(roles) > 0:
