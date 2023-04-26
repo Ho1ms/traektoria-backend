@@ -41,4 +41,5 @@ app.register_blueprint(admin_router)
 from .directions import direction_router
 app.register_blueprint(direction_router)
 
-
+from .news import news_router
+app.register_blueprint(news_router)

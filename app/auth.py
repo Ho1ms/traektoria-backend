@@ -72,6 +72,10 @@ def create_account():
 
     if not validate_data(data, keys):
         return dumps({'message': 'Вы не передали данные #2!', 'resultCode': 2}, ensure_ascii=False), 200
+    try:
+        datetime.strptime(data['birthday'], '%Y-%m-%d')
+    except ValueError:
+        return dumps({'message': 'Некорректная дата рождения!', 'resultCode': 2}, ensure_ascii=False), 200
 
     db, sql = create_connect()
 
@@ -119,7 +123,7 @@ def confirm_mail():
     sql.execute("SELECT create_at FROM mail_codes WHERE email=%s", (email,))
 
     is_mail = sql.fetchone()
-    if is_mail is None or (datetime.now() - is_mail['create_at']).seconds > 300:
+    if is_mail is None or (datetime.now() - is_mail['create_at']).seconds > 60:
         sql.execute("INSERT INTO mail_codes (email, code) VALUES (%s, %s)", (email, code))
         db.commit()
         mail_send(email, code)

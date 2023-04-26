@@ -3,13 +3,16 @@
 - **POST** `/auth/login` **- Авторизиция**
 
 **Body**
+
 ```
 {
     "login": str,
     "password": str
 }
 ```
+
 **Response**
+
 ```
 {
     'id': int,
@@ -26,25 +29,32 @@
 - **GET** `/auth/logout` **- Выйти**
 
 **Headers**
+
 ```
 Authorization: **token**
 ```
+
 **Response**
+
 ```
 {
     message: str,
     resultCode: int
 }
 ```
+
 - **POST** `/auth/confirm-mail` **- Подтверждение почты**
 
 **Body**
+
 ```
 {
     "mail": str
 }
 ```
+
 **Response**
+
 ```
 {
     message: str,
@@ -57,6 +67,7 @@ Authorization: **token**
 **(Сначала надо подтвердить почту `/auth/confirm-mail`)**
 
 **Body**
+
 ```
 {
     'login': str,
@@ -69,7 +80,9 @@ Authorization: **token**
     'code': str - 6 символов от 0 до 9
 }
 ```
+
 **Response**
+
 ```
 {
     'id': int,
@@ -89,35 +102,46 @@ Authorization: **token**
 - **GET** `/avatar/<user_id:int>` **- Получить аватар пользователя по ID**
 
 **Response**
+
 ```
 FILE (Render photo)
 ```
+
 - **POST** `/profile/set-avatar` **- Обновить аватар**
 
 **Headers**
+
 ```
 Authorization: **token**
 ```
+
 **Form-data**
+
 ```
 {
     avatar: FILE
 }
 ```
+
 **Response**
+
 ```
 {
     message: str,
     resultCode: int
 }
 ```
+
 - **POST** `/profile/update` **- Обновить данные профиля**
 
 **Headers**
+
 ```
 Authorization: **token**
 ```
+
 **Body**
+
 ```
 {
     'first_name': str,
@@ -126,27 +150,35 @@ Authorization: **token**
     'birthday': str YYYY-MM-DD
 }
 ```
+
 **Response**
+
 ```
 {
     message: str,
     resultCode: int
 }
 ```
+
 - **POST** `/profile/change_password` **- Изменить пароль**
 
 **Headers**
+
 ```
 Authorization: **token**
 ```
+
 **Body**
+
 ```
 {
     password_1: str,
     password_2: str
 }
 ```
+
 **Response**
+
 ```
 {
     message: str,
@@ -159,10 +191,13 @@ Authorization: **token**
 - **GET** `/auth/me` **- Получить профиль**
 
 **Headers**
+
 ```
 Authorization: **token**
 ```
+
 **Response**
+
 ```
 {
     "user": {
@@ -191,23 +226,29 @@ Authorization: **token**
             "title": str
         }
     ],
-    "likes": int
+    "likes": int,
+    "is_liked": bool
 }
 ```
 
 - **POST** `/profile/add-direction` **- Прикрепить направление пользователю**
 
 **Headers**
+
 ```
 Authorization: **token**
 ```
+
 **Body**
+
 ```
 {
     id: int, # id напраления
 }
 ```
+
 **Response**
+
 ```
 {
     message: str,
@@ -218,94 +259,125 @@ Authorization: **token**
 - **POST** `/profile/remove-direction` **- Открепить направление от пользователю**
 
 **Headers**
+
 ```
 Authorization: **token**
 ```
+
 **Body**
+
 ```
 {
     id: int, # id напраления
 }
 ```
+
 **Response**
+
 ```
 {
     message: str,
     resultCode: int
 }
 ```
+
 - **POST** `/profile/like` **- +/- респект**
 
 **Headers**
+
 ```
 Authorization: **token**
 ```
+
 **Body**
+
 ```
 {
     target_id: int, # id того, кому ставим/убираем лайк
     action: str # 'set' или 'unset'
 }
 ```
+
 **Response**
+
 ```
 {
     message: str,
     resultCode: int
 }
 ```
+
 ## Portfolio
+
 - **POST** `/profile/portfolio/add` **- Добавить картинку в портфолио**
 
 **Headers**
+
 ```
 Authorization: **token**
 ```
+
 **Form-data**
+
 ```
 file: IMAGE
 ```
+
 **Response**
+
 ```
 {
     message: str,
     resultCode: int
 }
 ```
+
 - **POST** `/profile/portfolio/delete` **- Удалить картинку в портфолио**
 
 **Headers**
+
 ```
 Authorization: **token**
 ```
+
 **Body**
+
 ```
 {
     filename: str
 }
 ```
+
 **Response**
+
 ```
 {
     message: str,
     resultCode: int
 }
 ```
+
 ## Contacts
+
 - **POST** `/profile/contacts/add` **- Добавить контакт**
 
 **Headers**
+
 ```
 Authorization: **token**
 ```
+
 **Body**
+
 ```
 {
     title: str,
     description: str
 }
 ```
+
 **Response**
+
 ```
 {
     id: int,
@@ -313,13 +385,17 @@ Authorization: **token**
     description: str
 }
 ```
+
 - **POST** `/profile/contacts/update` **- Обновить контакт**
 
 **Headers**
+
 ```
 Authorization: **token**
 ```
+
 **Body**
+
 ```
 {
     id: int,
@@ -327,7 +403,9 @@ Authorization: **token**
     description: str
 }
 ```
+
 **Response**
+
 ```
 {
     id: int,
@@ -335,33 +413,44 @@ Authorization: **token**
     description: str
 }
 ```
+
 - **POST** `/profile/contacts/delete` **- Удалить контакт**
 
 **Headers**
+
 ```
 Authorization: **token**
 ```
+
 **Body**
+
 ```
 {
     id: int,
 }
 ```
+
 **Response**
+
 ```
 {
     message: str,
     resultCode: int
 }
 ```
+
 ## Users
+
 - **GET** `/users` **- Список пользователей**
 
 **Params**
+
 ```
 q=str - Опциональный параметр поиска, если нужно найти конкретного человека по логину или ФИО если всех вывести то его не передаём
 ```
+
 **Response**
+
 ```
 [
     {
@@ -373,15 +462,21 @@ q=str - Опциональный параметр поиска, если нуж�
     }
 ]
 ```
-## ADMIN 
+
+## ADMIN
+
 > Работает если и пользователя `role_id=1`
+
 - **GET** `/admin/roles` **- Список ролей**
 
 **Headers**
+
 ```
 Authorization: **token**
 ```
+
 **Response**
+
 ```
 [
     {
@@ -398,13 +493,17 @@ Authorization: **token**
     }
 ]
 ```
+
 - **GET** `/admin/users` **- Список пользователей для администраторов**
 
 **Headers**
+
 ```
 Authorization: **token**
 ```
+
 **Response**
+
 ```
 [
     {
@@ -420,13 +519,17 @@ Authorization: **token**
     },
 ]
 ```
+
 - **POST** `/update_user/role` **- Обновить роль пользователю**
 
 **Headers**
+
 ```
 Authorization: **token**
 ```
+
 **Body**
+
 ```
 {
     'user_id': int, - тот которому мы меняем роль (можно взять из /admin/users)
@@ -439,6 +542,7 @@ Authorization: **token**
 - **GET** `/directions/` **- Список направлений (тем, тегов)**
 
 **Response**
+
 ```
 [
     {
@@ -448,22 +552,28 @@ Authorization: **token**
     }
 ]
 ```
-- **POST** `/directions/add` **- Добавить направление (тему, тег)** 
 
->Только для админов
+- **POST** `/directions/add` **- Добавить направление (тему, тег)**
+
+> Только для админов
 
 **Headers**
+
 ```
 Authorization: **token**
 ```
+
 **Body**
+
 ```
 {
     title: str,
     description: str
 }
 ```
+
 **Response**
+
 ```
 {
     id: int,
@@ -475,10 +585,13 @@ Authorization: **token**
 - **POST** `/directions/update` **- Обновить направление**
 
 **Headers**
+
 ```
 Authorization: **token**
 ```
+
 **Body**
+
 ```
 {
     id: int,
@@ -486,11 +599,93 @@ Authorization: **token**
     description: str
 }
 ```
+
 **Response**
+
 ```
 {
     id: int,
     title: str,
     description: str
+}
+```
+
+## News
+
+- **GET** `/news/` **- Список новостей**
+
+**Headers**
+
+```
+Authorization: **token** - Опционально
+```
+
+**Response**
+
+```
+[
+    {
+        "id": int,
+        "author_id": int,
+        "author_name": str,
+        "title": str,
+        "description": str,
+        "create_at": str,
+        "attachment": null or str
+    }
+]
+```
+
+- **POST** `/news/add` **- Добавить новость**
+
+
+**Headers**
+
+```
+Authorization: **token** 
+```
+
+**Form-data**
+
+```
+title: str
+description: str
+file: IMAGE
+```
+
+**Response**
+
+```
+{
+    'id': int,
+    'title': str,
+    'description': str,
+    'attachment': str or null
+}
+```
+
+- **POST** `/news/delete` **- Добавить новость**
+-
+
+**Headers**
+
+```
+Authorization: **token** 
+```
+
+**Body**
+
+```
+{
+    id: int # id новости (можно удалить только свою)
+}
+```
+
+**Response**
+
+```
+{
+  message: str,
+  resultCode: int
 }
 ```
