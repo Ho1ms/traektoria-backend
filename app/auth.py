@@ -58,15 +58,14 @@ def get_login():
 
     db.close()
 
-    user['token'] = token
-
     return dumps({
         'user': user,
         'contacts': contacts,
         'portfolio': portfolio,
         'directions': directions,
         'likes':likes,
-        'is_liked':False
+        'is_liked':False,
+        'token': token
     }, ensure_ascii=False), 200
 
 

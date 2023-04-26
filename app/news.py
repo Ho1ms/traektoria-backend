@@ -18,13 +18,14 @@ news_router = Blueprint('news', __name__, url_prefix='/news')
 def get_news_list():
     user = get_user(request.headers.get('Authorization'))
     db, sql = create_connect()
+    news = []
     if user:
         sql.execute("""SELECT * FROM (SELECT news.id, author_id, concat(u.last_name, ' ', u.first_name) as author_name, title, description, to_char(create_at, 'HH24:MM dd.mm.YYYY') create_at, attachment FROM news
                             INNER JOIN news_tags nt on news.id = nt.news_id AND direction_id = ANY(SELECT direction_id FROM user_directions WHERE user_id=%s)
-                            INNER JOIN users u ON author_id=u.id) t GROUP BY id, author_id, author_name, title, description, attachment, create_at""",
+                            LEFT JOIN users u ON author_id=u.id) t GROUP BY id, author_id, author_name, title, description, attachment, create_at""",
                     (user['id'],))
         news = sql.fetchall()
-    else:
+    if len(news) == 0:
         sql.execute("""SELECT news.id, author_id, concat(u.last_name, ' ', u.first_name) as author_name, title, description,  to_char(create_at, 'HH24:MM dd.mm.YYYY') create_at, attachment FROM news
     INNER JOIN users u ON author_id=u.id""")
         news = sql.fetchall()
