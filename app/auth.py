@@ -45,12 +45,6 @@ def get_login():
     return dumps(user, ensure_ascii=False), 200
 
 
-@auth_router.get('/me')
-@access_handler()
-def get_me(user):
-    return dumps(user, ensure_ascii=False, default=str), 200
-
-
 @auth_router.get('/logout')
 @access_handler()
 def do_logout(user):

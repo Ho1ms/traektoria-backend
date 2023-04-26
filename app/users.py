@@ -12,7 +12,7 @@ users_router = Blueprint('users', __name__, url_prefix='/users')
 def get_roles():
     db, sql = create_connect()
 
-    sql.execute("SELECT id, first_name, last_name, father_name FROM users")
+    sql.execute("SELECT id, first_name, last_name, father_name, login FROM users")
     rows = sql.fetchall()
 
     db.close()

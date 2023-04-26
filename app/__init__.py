@@ -38,4 +38,7 @@ app.register_blueprint(users_router)
 from .admin import admin_router
 app.register_blueprint(admin_router)
 
+from .directions import direction_router
+app.register_blueprint(direction_router)
+
 

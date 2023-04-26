@@ -22,26 +22,7 @@
     'token': str - Это сохранять в localStorage и в Authorization пихать
 }
 ```
-- **GET** `/auth/me` **- Инфо о пользователе по токену**
 
-**Headers**
-```
-Authorization: **token**
-```
-
-**Response**
-```
-{
-    'id': int,
-    'first_name': str,
-    'last_name': str,
-    'father_name': str,
-    'birthday': str YYYY-MM-DD,
-    'login': str,
-    'role_id': int,
-    'role': str
-}
-```
 - **GET** `/auth/logout` **- Выйти**
 
 **Headers**
@@ -174,6 +155,9 @@ Authorization: **token**
 ```
 
 - **GET** `/profile` **- Получить профиль**
+- **GET** `/profile/<username>` **- Получить чужой профиль**
+- **GET** `/auth/me` **- Получить профиль**
+
 **Headers**
 ```
 Authorization: **token**
@@ -200,10 +184,76 @@ Authorization: **token**
     ],
     'portfolio':[
         str
-    ]
+    ],
+    "directions": [
+        {
+            "id": int,
+            "title": str
+        }
+    ],
+    "likes": int
 }
 ```
 
+- **POST** `/profile/add-direction` **- Прикрепить направление пользователю**
+
+**Headers**
+```
+Authorization: **token**
+```
+**Body**
+```
+{
+    id: int, # id напраления
+}
+```
+**Response**
+```
+{
+    message: str,
+    resultCode: int
+}
+```
+
+- **POST** `/profile/remove-direction` **- Открепить направление от пользователю**
+
+**Headers**
+```
+Authorization: **token**
+```
+**Body**
+```
+{
+    id: int, # id напраления
+}
+```
+**Response**
+```
+{
+    message: str,
+    resultCode: int
+}
+```
+- **POST** `/profile/like` **- +/- респект**
+
+**Headers**
+```
+Authorization: **token**
+```
+**Body**
+```
+{
+    target_id: int, # id того, кому ставим/убираем лайк
+    action: str # 'set' или 'unset'
+}
+```
+**Response**
+```
+{
+    message: str,
+    resultCode: int
+}
+```
 ## Portfolio
 - **POST** `/profile/portfolio/add` **- Добавить картинку в портфолио**
 
@@ -312,6 +362,7 @@ Authorization: **token**
 [
     {
         "id": id,
+        "login":str,
         "first_name": str,
         "last_name": str,
         "father_name": str
@@ -379,6 +430,63 @@ Authorization: **token**
 }
 ```
 
+## Directions
 
+- **GET** `/directions/` **- Список направлений (тем, тегов)**
 
+**Response**
+```
+[
+    {
+        "id": int,
+        "title": str,
+        "description": description
+    }
+]
+```
+- **POST** `/directions/add` **- Добавить направление (тему, тег)** 
 
+>Только для админов
+
+**Headers**
+```
+Authorization: **token**
+```
+**Body**
+```
+{
+    title: str,
+    description: str
+}
+```
+**Response**
+```
+{
+    id: int,
+    title: str,
+    description: str
+}
+```
+
+- **POST** `/directions/update` **- Обновить направление**
+
+**Headers**
+```
+Authorization: **token**
+```
+**Body**
+```
+{
+    id: int,
+    title: str,
+    description: str
+}
+```
+**Response**
+```
+{
+    id: int,
+    title: str,
+    description: str
+}
+```
