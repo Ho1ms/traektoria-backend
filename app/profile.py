@@ -20,17 +20,24 @@ profile_router = Blueprint('profile', __name__, url_prefix='/profile')
 def my_profile(username=None):
     db, sql = create_connect()
     self_user = get_user(request.headers.get('Authorization'))
+
+    if self_user is None and username is None:
+        return '', 200
+
+    is_liked = False
     if username is not None:
+
         sql.execute("""SELECT u.id, first_name, last_name, father_name, login, role_id, r.name role, birthday
                                 FROM users u LEFT JOIN roles r on r.id = u.role_id WHERE u.login=%s""", (username,))
         user = sql.fetchone()
-        sql.execute("SELECT COUNT(*) cnt FROM user_likes WHERE target_id=%s AND user_id=%s", (user['id'], self_user['id'] or None))
-        is_liked = sql.fetchone()['cnt'] != 0
+        if self_user and 'id' in self_user:
+            sql.execute("SELECT COUNT(*) cnt FROM user_likes WHERE target_id=%s AND user_id=%s", (user['id'], self_user['id']))
+            is_liked = sql.fetchone()['cnt'] != 0
 
         if user is None:
             return dumps({'message': 'Профиль не найден!', 'resultCode': 2}, ensure_ascii=False), 200
     else:
-        is_liked = False
+
         user = self_user
     sql.execute("SELECT id, title, description FROM contacts WHERE user_id=%s ORDER BY id", (user['id'],))
     contacts = sql.fetchall()

@@ -1,3 +1,6 @@
+import os
+from . import app
+from os.path import join, exists
 from json import dumps
 from hashlib import sha256
 from datetime import datetime
@@ -38,11 +41,33 @@ def get_login():
     token = sha256(f"{password}{randint(0, 999)}{datetime.now().timestamp()}".encode('utf-8')).hexdigest()
     sql.execute("INSERT INTO sessions (token, user_id) VALUES (%s, %s)", (token, user['id']))
     db.commit()
+
+    sql.execute("SELECT id, title, description FROM contacts WHERE user_id=%s ORDER BY id", (user['id'],))
+    contacts = sql.fetchall()
+
+    sql.execute(
+        "SELECT s.id, title  FROM user_directions ud INNER JOIN specialties s ON ud.direction_id = s.id WHERE ud.user_id=%s  ORDER BY s.id",
+        (user['id'],))
+    directions = sql.fetchall()
+
+    sql.execute("SELECT COUNT(*) cnt FROM user_likes WHERE target_id=%s", (user['id'],))
+    likes = sql.fetchone()['cnt']
+    portfolio_path = join(app.static_folder, 'portfolio', str(user['id']))
+    is_portfolio = exists(portfolio_path)
+    portfolio = os.listdir(portfolio_path) if is_portfolio else []
+
     db.close()
 
     user['token'] = token
 
-    return dumps(user, ensure_ascii=False), 200
+    return dumps({
+        'user': user,
+        'contacts': contacts,
+        'portfolio': portfolio,
+        'directions': directions,
+        'likes':likes,
+        'is_liked':False
+    }, ensure_ascii=False), 200
 
 
 @auth_router.get('/logout')
