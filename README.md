@@ -172,6 +172,138 @@ Authorization: **token**
     resultCode: int
 }
 ```
+
+- **GET** `/profile` **- Получить профиль**
+**Headers**
+```
+Authorization: **token**
+```
+**Response**
+```
+{
+    "user": {
+        'id': int,
+        'first_name': str,
+        'last_name': str,
+        'father_name': str,
+        'birthday': str YYYY-MM-DD,
+        'login': str,
+        'role_id': int,
+        'role': str
+    },
+    contacts: [
+        {
+            'id': int,
+            'title': str,
+            'description': str
+        }
+    ],
+    'portfolio':[
+        str
+    ]
+}
+```
+
+## Portfolio
+- **POST** `/profile/portfolio/add` **- Добавить картинку в портфолио**
+
+**Headers**
+```
+Authorization: **token**
+```
+**Form-data**
+```
+file: IMAGE
+```
+**Response**
+```
+{
+    message: str,
+    resultCode: int
+}
+```
+- **POST** `/profile/portfolio/delete` **- Удалить картинку в портфолио**
+
+**Headers**
+```
+Authorization: **token**
+```
+**Body**
+```
+{
+    filename: str
+}
+```
+**Response**
+```
+{
+    message: str,
+    resultCode: int
+}
+```
+## Contacts
+- **POST** `/profile/contacts/add` **- Добавить контакт**
+
+**Headers**
+```
+Authorization: **token**
+```
+**Body**
+```
+{
+    title: str,
+    description: str
+}
+```
+**Response**
+```
+{
+    id: int,
+    title: str,
+    description: str
+}
+```
+- **POST** `/profile/contacts/update` **- Обновить контакт**
+
+**Headers**
+```
+Authorization: **token**
+```
+**Body**
+```
+{
+    id: int,
+    title: str,
+    description: str
+}
+```
+**Response**
+```
+{
+    id: int,
+    title: str,
+    description: str
+}
+```
+- **POST** `/profile/contacts/delete` **- Удалить контакт**
+
+**Headers**
+```
+Authorization: **token**
+```
+**Body**
+```
+{
+    id: int,
+}
+```
+**Response**
+```
+{
+    message: str,
+    resultCode: int
+}
+```
 ## Users
 - **GET** `/users` **- Список пользователей**
 
@@ -246,6 +378,7 @@ Authorization: **token**
     'role_id': int - ту на которую меняем (/admin/roles)
 }
 ```
+
 
 
 

@@ -32,6 +32,8 @@ def get_login():
                 "FROM users u LEFT JOIN roles r on r.id = u.role_id WHERE login = %s AND password = %s",
                 (data.get('login'), password))
     user = sql.fetchone()
+    if user is None:
+        return dumps({'message': 'Неверный логин или пароль!', 'resultCode': 2}, ensure_ascii=False), 200
 
     token = sha256(f"{password}{randint(0, 999)}{datetime.now().timestamp()}".encode('utf-8')).hexdigest()
     sql.execute("INSERT INTO sessions (token, user_id) VALUES (%s, %s)", (token, user['id']))

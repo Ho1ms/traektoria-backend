@@ -25,6 +25,11 @@ from .auth import auth_router
 app.register_blueprint(auth_router)
 
 from .profile import profile_router
+from .contacts import contacts_router
+from .portfolio import portfolio_router
+
+profile_router.register_blueprint(portfolio_router)
+profile_router.register_blueprint(contacts_router)
 app.register_blueprint(profile_router)
 
 from .users import users_router
@@ -32,3 +37,5 @@ app.register_blueprint(users_router)
 
 from .admin import admin_router
 app.register_blueprint(admin_router)
+
+

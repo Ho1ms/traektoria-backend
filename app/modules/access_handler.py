@@ -33,14 +33,14 @@ def access_handler(*roles):
             auth_token = r.headers.get('Authorization', '')
 
             if len(auth_token) != 64:
-                return {'message': 'Undefined token', 'resultCode': 2}, 200
+                return "", 200
 
             user = get_user(auth_token, roles)
 
             if user is not None:
                 return func(user=user, **kwargs)
 
-            return json.dumps({'message': 'Нет доступа!', 'resultCode': 2}, ensure_ascii=False), 200
+            return '', 200
         inner.__name__ = func.__name__
         return inner
 

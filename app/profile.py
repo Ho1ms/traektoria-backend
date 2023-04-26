@@ -1,5 +1,6 @@
 from . import app
 
+import os
 from json import dumps
 from hashlib import sha256
 from os.path import join, exists
@@ -12,6 +13,24 @@ from .modules.access_handler import access_handler
 
 profile_router = Blueprint('profile', __name__, url_prefix='/profile')
 
+
+@app.get('/profile')
+@access_handler()
+def my_profile(user):
+    db, sql = create_connect()
+
+    sql.execute("SELECT id, title, description FROM contacts WHERE user_id=%s ORDER BY id", (user['id'],))
+    contacts = sql.fetchall()
+
+    portfolio_path = join(app.static_folder, 'portfolio', str(user['id']))
+    is_portfolio = exists(portfolio_path)
+    portfolio = os.listdir(portfolio_path) if is_portfolio else []
+
+    return dumps({
+        'user': user,
+        'contacts': contacts,
+        'portfolio':portfolio
+    }, ensure_ascii=False, default=str)
 
 @app.get('/avatar/<int:user_id>')
 @cross_origin()
