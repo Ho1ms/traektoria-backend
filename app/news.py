@@ -22,12 +22,12 @@ def get_news_list():
     if user:
         sql.execute("""SELECT * FROM (SELECT news.id, author_id, concat(u.last_name, ' ', u.first_name) as author_name, title, description, to_char(create_at, 'HH24:MM dd.mm.YYYY') create_at, attachment FROM news
                             INNER JOIN news_tags nt on news.id = nt.news_id AND direction_id = ANY(SELECT direction_id FROM user_directions WHERE user_id=%s)
-                            LEFT JOIN users u ON author_id=u.id) t GROUP BY id, author_id, author_name, title, description, attachment, create_at""",
+                            LEFT JOIN users u ON author_id=u.id) t GROUP BY id, author_id, author_name, title, description, attachment, create_at ORDER BY create_at DESC""",
                     (user['id'],))
         news = sql.fetchall()
     if len(news) == 0:
-        sql.execute("""SELECT news.id, author_id, concat(u.last_name, ' ', u.first_name) as author_name, title, description,  to_char(create_at, 'HH24:MM dd.mm.YYYY') create_at, attachment FROM news
-    INNER JOIN users u ON author_id=u.id""")
+        sql.execute("""SELECT news.id, author_id, concat(u.last_name, ' ', u.first_name) as author_name, title, description,  to_char(create_at, 'HH24:MM dd.mm.YYYY') create_at, attachment FROM news 
+    INNER JOIN users u ON author_id=u.id ORDER BY create_at DESC""")
         news = sql.fetchall()
 
     return dumps(news, ensure_ascii=False, default=str), 200

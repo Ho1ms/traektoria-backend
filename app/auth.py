@@ -131,7 +131,15 @@ def create_account():
 
     user = get_user(token)
     user['token'] = token
-    return dumps(user, ensure_ascii=False, default=str), 200
+    return dumps({
+        'user': user,
+        'contacts': [],
+        'portfolio': [],
+        'directions': [],
+        'likes':0,
+        'is_liked':False,
+        'token': token
+    }, ensure_ascii=False, default=str), 200
 
 
 @auth_router.post('/confirm-mail')

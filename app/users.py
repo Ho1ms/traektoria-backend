@@ -28,6 +28,11 @@ def get_roles():
         GROUP BY users.id, first_name, last_name, father_name, login ) t LEFT JOIN user_likes u ON target_id=t.id AND user_id=%s ORDER BY likes DESC, id  """, args)
     rows = sql.fetchall()
 
+    # Жоска заговнокодили ибо времени нет
+    for row in rows:
+        sql.execute("SELECT s.id, s.title FROM specialties s INNER JOIN user_directions ud on s.id = ud.direction_id WHERE user_id=%s", (row['id'],))
+        row['directions'] = sql.fetchall()
+        
     db.close()
     return dumps(rows, ensure_ascii=False), 200
 
