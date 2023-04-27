@@ -22,8 +22,8 @@ def get_roles():
     if request.args.get('q') is not None:
         q = "WHERE CONCAT(last_name,' ',first_name ,' ',father_name,' ', login) LIKE %s"
         args = (query,user['id'] if user else None)
-    sql.execute(f"""SELECT t.id, first_name, last_name, father_name, login, likes,  (u.id is not null) as is_liked FROM (
-    SELECT users.id, first_name, last_name, father_name, login, count(ul.target_id) likes
+    sql.execute(f"""SELECT t.id, first_name, last_name, father_name, login, likes,  (u.id is not null) as is_liked, is_company FROM (
+    SELECT users.id, first_name, last_name, father_name, login, count(ul.target_id) likes, role_id=4 as is_company
         FROM users LEFT JOIN user_likes ul on users.id = ul.target_id {q}
         GROUP BY users.id, first_name, last_name, father_name, login ) t LEFT JOIN user_likes u ON target_id=t.id AND user_id=%s ORDER BY likes DESC, id  """, args)
     rows = sql.fetchall()
@@ -32,7 +32,7 @@ def get_roles():
     for row in rows:
         sql.execute("SELECT s.id, s.title FROM specialties s INNER JOIN user_directions ud on s.id = ud.direction_id WHERE user_id=%s", (row['id'],))
         row['directions'] = sql.fetchall()
-        
+
     db.close()
     return dumps(rows, ensure_ascii=False), 200
 
